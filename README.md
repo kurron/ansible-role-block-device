@@ -1,7 +1,7 @@
 Role Name
 =========
 
-MySQL server, initially targetted to RHEL.
+Transforms raw block storage into a working mounted partition.
 
 Requirements
 ------------
@@ -24,7 +24,7 @@ Example Playbook
 ```
 - hosts: servers
   roles:
-      - { role: kurron.mysql }
+      - { role: kurron.block-device }
 ```
 
 License

@@ -1,6 +1,6 @@
 galaxy_info:
   author: Ronald D. Kurr
-  description: MySQL server.
+  description: Transforms raw storage into a working mounted partition.
   company: jvmguy.com
 
   license: Apache 2

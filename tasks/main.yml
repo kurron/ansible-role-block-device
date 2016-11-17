@@ -1,85 +1,10 @@
 ---
-# this fails with 104 errors for some reason.  can't follow redirects?
-- name: Download MySQL Repository Configuration
-  become: no
-  get_url:
-      url: "http://repo.mysql.com//mysql57-community-release-el7-9.noarch.rpm"
-      dest: "{{ansible_user_dir}}/{{base_download_directory}}/mysql57-community-release-el7-9.noarch.rpm"
-  when: mysql_install and (ansible_distribution == "FALSE")
-
-# download by hand because of the issue with get_url
-- name: Download MySQL Repository Configuration
-  become: no
-  command: "curl --output {{ansible_user_dir}}/{{base_download_directory}}/mysql57-community-release-el7-9.noarch.rpm http://repo.mysql.com//mysql57-community-release-el7-9.noarch.rpm"
-  when: mysql_install and (ansible_distribution == "RedHat")
-
-- name: Install MySQL Repository
+- name: Create partition table
+  command: "parted {{bd_block_device}} mklabel gpt"
   become: yes
-  yum:
-      name: "{{ansible_user_dir}}/{{base_download_directory}}/mysql57-community-release-el7-9.noarch.rpm"
-      state: present
-  when: mysql_install and (ansible_distribution == "RedHat")
+  when: bd_install
 
-- name: Install MySQL And Companion Tools
+- name: Create partition
+  command: "parted {{bd_block_device}} mkpart primary {{bd_file_system}} 0% 100%""
   become: yes
-  yum:
-      name: "{{ item }}"
-      state: present
-  with_items:
-      - mysql-community-server
-      - mysql-community-client
-      - MySQL-python
-  when: mysql_install and (ansible_distribution == "RedHat")
-
-- name: Adjust MySQL Configuration File
-  become: yes
-  lineinfile:
-      dest: /etc/my.cnf
-      line: "{{ item }}"
-  with_items:
-      - "character-set-server=utf8"
-      - "bind-address=*"
-      - "lower_case_table_names=1"
-  when: mysql_install and (ansible_distribution == "RedHat")
-
-- name: Copy Password Capture Script
-  become: yes
-  copy:
-      src: files/extract-password.sh
-      dest: /tmp/extract-password.sh
-      mode: 0555
-  when: mysql_install and (ansible_distribution == "RedHat")
-
-- name: Copy Password Alter Script
-  become: yes
-  copy:
-      src: files/change-password.sh
-      dest: /tmp/change-password.sh
-      mode: 0555
-  when: mysql_install and (ansible_distribution == "RedHat")
-
-- name: Capture MySQL Root Password
-  become: yes
-  shell: /tmp/extract-password.sh
-  register: password
-  when: mysql_install and (ansible_distribution == "RedHat")
-
-- debug:
-      msg: "Password = {{ password.stdout }}"
-  when: mysql_install
-
-- name: Start MySQL
-  become: yes
-  systemd:
-      name: mysqld
-      enabled: yes
-      daemon_reload: yes
-      state: restarted
-  when: mysql_install
-
-# Note: We do not use mysql_user for this operation, as it doesn't always update
-# the root password correctly. See: https://goo.gl/MSOejW
-# Set root password for MySQL >= 5.7.x.
-- name: Update MySQL root password for localhost root account (5.7.x).
-  command: "/tmp/change-password.sh {{ password.stdout }}"
-  when: mysql_install
+  when: bd_install
