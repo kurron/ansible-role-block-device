@@ -11,11 +11,11 @@ TODO
 Role Variables
 --------------
 
-bd_install: true
-bd_block_device: /dev/xvdf
-bd_file_system: xfs
-bd_mount_point: /var/lib/mysql
-bd_label: MYSQL
+* bd_install: true
+* bd_block_device: /dev/xvdf
+* bd_file_system: xfs
+* bd_mount_point: /var/lib/mysql
+* bd_label: MYSQL
 
 Dependencies
 ------------
