@@ -1,7 +1,7 @@
 ---
 - name: Make sure parted is installed
   become: yes
-  package: 
+  package:
       name: parted
       state: present
   when: bd_install
@@ -34,5 +34,5 @@
       name: "{{bd_mount_point}}"
       src: "LABEL={{bd_label}}"
       fstype: "{{bd_file_system}}"
-      state: present
+      state: mounted
   when: bd_install
