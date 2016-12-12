@@ -8,17 +8,17 @@
 
 - name: Create partition table
   become: yes
-  command: "parted {{bd_block_device}} mklabel gpt"
+  command: "parted --script {{bd_block_device}} mklabel gpt"
   when: bd_install
 
 - name: Create partition
   become: yes
-  command: "parted {{bd_block_device}} mkpart primary {{bd_file_system}} 0% 100%"
+  command: "parted --script {{bd_block_device}} mkpart primary {{bd_file_system}} 0% 100%"
   when: bd_install
 
 - name: Create file system
   become: yes
-  command: "mkfs.{{bd_file_system}} -L {{bd_label}} {{bd_block_device}}1"
+  command: "mkfs.{{bd_file_system}} -f -L {{bd_label}} {{bd_block_device}}1"
   when: bd_install
 
 - name: Create mount point
@@ -34,5 +34,6 @@
       name: "{{bd_mount_point}}"
       src: "LABEL={{bd_label}}"
       fstype: "{{bd_file_system}}"
+      opts: "{{bd_options}}"
       state: mounted
   when: bd_install

@@ -16,6 +16,7 @@ Role Variables
 * bd_file_system: xfs
 * bd_mount_point: /var/lib/mysql
 * bd_label: MYSQL
+* bd_options: defaults
 
 Dependencies
 ------------
@@ -28,7 +29,7 @@ Example Playbook
 ```
 - hosts: servers
   roles:
-      - { role: kurron.block-device,  bd_block_device: /dev/sdb, bd_mount_point: /mnt/data, bd_label: MYSQL }
+      - { role: kurron.block-device,  bd_block_device: /dev/sdb, bd_mount_point: /mnt/data, bd_label: MYSQL, bd_options: noatime }
 ```
 
 License
