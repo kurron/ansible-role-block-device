@@ -37,3 +37,18 @@
       opts: "{{bd_options}}"
       state: mounted
   when: bd_install
+
+- name: Determine If We Are Running In AWS
+  become: no
+  set_fact:
+      running_in_aws: ansible_user_id == "ec2-user"
+
+- name: Configure Read Ahead Block Size
+  become: yes
+  cron:
+      name: read-ahead
+      special_time: reboot
+      state: present
+      user: root
+      job: '/sbin/blockdev --setra 32 {{bd_block_device}}'
+  when: mongodb_install and running_in_aws
