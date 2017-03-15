@@ -1,25 +1,8 @@
 ---
-- name: Make sure parted is installed
-  become: yes
-  package:
-      name: parted
-      state: present
-  when: bd_install and bd_create_partition
-
-- name: Create partition table
-  become: yes
-  command: "parted --script {{bd_block_device}} mklabel gpt"
-  when: bd_install and bd_create_partition
-
-- name: Create partition
-  become: yes
-  command: "parted --script {{bd_block_device}} mkpart primary {{bd_file_system}} 0% 100%"
-  when: bd_install and bd_create_partition
-
 - name: Create file system
   become: yes
-  command: "mkfs.{{bd_file_system}} -f -L {{bd_label}} {{bd_block_device}}1"
-  when: bd_install
+  command: "mkfs.{{bd_file_system}} -f -L {{bd_label}} {{bd_block_device}}"
+  when: bd_install and bd_create_partition
 
 - name: Create mount point
   become: yes
