@@ -1,7 +1,9 @@
 Role Name
 =========
 
-Transforms raw block storage into a working mounted partition.
+Transforms raw block storage into a mounted file system.  By default,
+the device will not be partitioned.  This is useful when having to grow
+the file system after expanding a virtual block device.
 
 Requirements
 ------------
@@ -13,6 +15,7 @@ Role Variables
 
 * bd_install: true
 * bd_block_device: /dev/xvdf
+* bd_create_partition: false
 * bd_file_system: xfs
 * bd_mount_point: /var/lib/mysql
 * bd_label: MYSQL
