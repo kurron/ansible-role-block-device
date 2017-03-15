@@ -2,7 +2,7 @@
 - name: Create file system
   become: yes
   command: "mkfs.{{bd_file_system}} -f -L {{bd_label}} {{bd_block_device}}"
-  when: bd_install and bd_create_partition
+  when: bd_install
 
 - name: Create mount point
   become: yes
