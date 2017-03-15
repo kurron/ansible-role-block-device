@@ -51,4 +51,4 @@
       state: present
       user: root
       job: '/sbin/blockdev --setra 32 {{bd_block_device}}'
-  when: mongodb_install and running_in_aws
+  when: bd_install and running_in_aws
