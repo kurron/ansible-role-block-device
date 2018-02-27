@@ -1,3 +1,3 @@
 #!/bin/bash
 
-ansible-playbook --verbose --inventory-file inventory --user ec2-user --become-user root test.yml
+ansible-playbook --verbose --inventory-file inventory --user ubuntu --become-user root test.yml

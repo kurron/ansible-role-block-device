@@ -21,11 +21,16 @@
       state: mounted
   when: bd_install
 
-# need a better way to determine this.  Hit the meta-data endpoint?
-- name: Determine If We Are Running In AWS
+- name: Check if inside AWS.
   become: no
-  set_fact:
-      running_in_aws: ansible_user_id == "ec2-user"
+  uri:
+      url: http://169.254.169.254/latest/meta-data
+      timeout: 2
+  register: aws_uri_check
+  failed_when: False
+
+- set_fact:
+      is_aws_environment: "{{ aws_uri_check.status == 200 }}"
 
 - name: Configure Read Ahead Block Size
   become: yes
@@ -35,4 +40,4 @@
       state: present
       user: root
       job: '/sbin/blockdev --setra 32 {{bd_block_device}}'
-  when: bd_install and running_in_aws
+  when: bd_install and is_aws_environment
